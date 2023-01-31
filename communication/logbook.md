@@ -45,7 +45,7 @@ As shown in the diagram above, the two graphs in the first row represent the mes
 
 The graphs in the second row show the modulated signals (carrier and message signal) and the frequency diagram of the modulated signal. 
 
-![l1e3q12](./images/GetImage%20(8).png)
+![l1e3q12](./images/1.jpg)
 
 
 This is the block diagram of how we design it. 
@@ -58,20 +58,20 @@ This is the block diagram of how we design it.
 
 __Question 2:__ Set 𝐴𝑐 = 2 and change 𝐴𝑚 in the panel window to obtain the modulation index values 𝜇 = {0.5,1, 1.5}. For each value of 𝜇 plot the time domain and PSD representations of both the message and modulated signals. What is the impact of the modulation index on the modulated signal? Explain your answer. 
  
-![l1e3q21](./images/GetImage%20(9).png)
+![l1e3q21](./images/2.jpg)
 
 
 Modulation index (μ) = 0.5 
 
 The signal is under-modulated signal. This can create the original cosine signal with the right frequency. 
 
-![l1e3q22](./images/GetImage%20(10).png)
+![l1e3q22](./images/3.jpg)
 
 Modulation index (μ) = 1 
 
 The signal is a perfect-modulated signal. The modulated signal perfectly represents a cosine signal with frequency of 1kHz. 
 
-![l1e3q23](./images/GetImage%20(11).png)
+![l1e3q23](./images/4.jpg)
 
 Modulation index (μ) = 1.5 
 
