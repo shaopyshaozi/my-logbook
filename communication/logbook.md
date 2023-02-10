@@ -113,3 +113,141 @@ The varying message frequency changes the modulated signal's frequency graph. Th
 In the last step, we created a sub-VI for this design, similar to a sub-module. 
 
 ![l1e3q34](./images/GetImage%20(15).png)
+
+# Lab 2 AM Simulation and USRP
+
+### Lab 2 Exercise 1
+In this task, we are going to demodulate the amplitude modulated signal using two method. 
+
+1. Coherent demodulation: multiply AM signal with carrier signal and apply a low pass filter.
+2. Envelope Detection: Rectify AM signal, low pass filtered, and remove DC component.
+
+#### Exercise 1a (Coherent):
+This is the block diagram of the model:
+![l2p1](./images/l2p1.jpg)
+![l2p3](./images/l2p3.jpg)
+
+* In the diagram, we can remove the DC component by applying `Amplitude Measurements` module. We can input the signal, and the module can output the DC value. Remeber to use `single shot` mode.
+* `Filter` module can create a low pass filter
+
+The original signal is given by:
+
+![l2e3](./images/19.PNG)
+
+By multiplying the carrier signal and applying a low pass filter, we can get the following result:
+
+![l2p6](./images/l2p6.jpg)
+
+The output from the low pass filter is a combination of a DC value and the message signal, so we have to minus the DC value to recover the true message signal. Setting Ac = 2 to adjust the constant.
+
+
+#### Exercise 1b (Envelope):
+Block Diagram:
+![l2p2](./images/l2p2.jpg)
+![l2p4](./images/l2p4.jpg)
+
+* Multiplication of $\Pi$ is used to amplify the signal and compensate the loss from rectification.
+
+> Rectifier does not have a simple impulse response, a diode that performs  rectification is a non-linear component and thus does not have a linear impulse response. But when we rectify a periodic signal, its impulse response looks like a square wave with same period T. (All negative value = 0). The convolution of cosine message signal with square wave has the following frequency response. At low frequecny, amplutude = 1/$\Pi$ with A = 1/2, so a multiplication of $\Pi$ is needed before rectification.
+
+![l2p7](./images/l2p7.jpg)
+
+* `Waveform Properties` and `Build Waveform` are dual blocks. The first one decompose a waveform into complex array, while the second one reconstruct the wave from from data array. In this design, we decompose the signal, set negative values to zero, and reconstruct to achieve rectification.
+
+
+__*How Envelope Detection works:*__
+
+The diode detector acts like a rectifier that cuts of any negative compenent. The red line is the envelope, which in this case is the message signal. After passing through the low pass filter and minus the DC value, the only thing remaining is the red line (message signal) centered around DC.
+
+![l2p8](./images/l2p8.jpg)
+
+### Exercise 2: AM Simulation:
+Block diagram:
+
+![l2p5](./images/l2p5.jpg)
+
+After setting the variables to the correct value and changing the message signal amplitude from 1 to 4, we observed that the coherent method is receiving the exact same signal while the envelop detection method failed to function after message amplitude is greater than 2. Instead, the second method received distorted signal.
+
+Message amplitude = 1:
+
+![l2p9](./images/l2p9.jpg)
+
+Message amplitude = 2:
+
+![l2p10](./images/l2p10.jpg)
+
+Message amplitude = 3:
+
+![l2p11](./images/l2p11.jpg)
+
+Message amplitude = 4:
+
+![l2p12](./images/l2p12.jpg)
+
+This distortion comes from the mathematical logic behind the method. Remember, the AM signal has the equation:
+
+![l2e3](./images/19.PNG)
+
+The envelope detection line received the signal `Ac + Amcos(2pifmt)`. If Ac > Am/under modulation, the system is fine, becuase all the message signal is fully on the upper half plane. 
+
+![l2p13](./images/l2p13.jpg)
+
+However, if Ac < Am / overmodulated, the amplitude of the carrier is already fliped, so we cannot recover the original message signal
+
+![l2p14](./images/l2p14.jpg)
+
+### Exercise 3
+niUSRP is a communication module that can send and receive signals.
+Several components explanation:
+
+![l2p15](./images/l2p15.jpg)
+
+![l2p16](./images/l2p16.jpg)
+
+![l2p17](./images/l2p17.jpg)
+
+Transimitter side:
+
+![l2p18](./images/l2p18.jpg)
+
+Recevier side:
+
+![l2p19](./images/l2p19.jpg)
+
+#### Task 2:
+Transmit a single-tone message signal with frequency 5kHz and modulation index 1:
+
+![l2p20](./images/l2p20.jpg)
+
+The signal is perfectlly received at the receiver side, with PSD showing a high peak at 5000 HZ.
+
+#### Task 3: Observing noise:
+Gain at receiver end is set to 20dB.
+
+Modulation index = 0.8:
+
+![l2p21](./images/l2p21.jpg)
+
+Modulation index = 0.7:
+
+![l2p22](./images/l2p22.jpg)
+
+Modulation index = 0.6:
+
+![l2p23](./images/l2p23.jpg)
+
+Modulation index = 0.5:
+
+![l2p24](./images/l2p24.jpg)
+
+At this modulation index, noises started to appear on both frequency and time domain.
+
+### Exercise 4: Listerning to AM Music:
+When running `USRP_AM_Rx_Music.gvi`, the music is received after around 1 minutes, because IQ rate is 100k, very high.
+
+> Not sure why IQ rate/sampling frequency affect time of receiving signal
+
+![l2p25](./images/l2p25.jpg)
+
+> video: music recorded
+
