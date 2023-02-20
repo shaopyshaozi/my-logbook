@@ -1,5 +1,20 @@
-# Lab 1
+<div id="top"/>
 
+# Communication Lab
+
+Steven Shao, 27/01/2023
+
+* [Lab 1 Exercise 1](#lab1e1)
+* [Lab 1 Exercise 2](#lab1e2)
+* [Lab 1 Exercise 3](#lab1e3)
+* [Lab 2 Exercise 1](#lab2e1)
+* [Lab 2 Exercise 2](#lab2e2)
+* [Lab 2 Exercise 3](#lab2e3)
+* [Lab 2 Exercise 4](#lab2e4)
+
+<div id="lab1e1"/>
+
+# Lab 1
 ## Lab 1 Exercise 1
 ![l1e1](./images/GetImage.png)
 
@@ -7,7 +22,9 @@ This is the result of "HOT NAME" by inputting my full name into the system. My n
 
 I also try to figure the HOTNAME output from this system. __It seems like only if the name containing all "Z" will output HOT.__ 
 
-## Lab 1 Exercise 2 
+<div id="lab1e2"/>
+
+### [Lab 1 Exercise 2](#top)
 
 __Question 1:__ Include the block diagram and the front panel in your logbook.  
 
@@ -31,7 +48,9 @@ Inside LABVIEW, there is a "statistic block" under the diagram tab. This block c
 
 ![l1e2q32](./images/GetImage%20(6).png)
 
- ## LAB 1 Exercise 3 
+<div id="lab1e3"/>
+
+ ### [LAB 1 Exercise 3](#top)
 
 In this exercise, we are going to build an AM modulator and graph the output of the modulated signals. The equation for modulating a single tone signal is given by: 
  
@@ -114,9 +133,11 @@ In the last step, we created a sub-VI for this design, similar to a sub-module.
 
 ![l1e3q34](./images/GetImage%20(15).png)
 
+<div id="lab2e1"/>
+
 # Lab 2 AM Simulation and USRP
 
-### Lab 2 Exercise 1
+### [Lab 2 Exercise 1](#top)
 In this task, we are going to demodulate the amplitude modulated signal using two method. 
 
 1. Coherent demodulation: multiply AM signal with carrier signal and apply a low pass filter.
@@ -161,7 +182,9 @@ The diode detector acts like a rectifier that cuts of any negative compenent. Th
 
 ![l2p8](./images/l2p8.jpg)
 
-### Exercise 2: AM Simulation:
+<div id="lab2e2"/>
+
+### [Lab 2 Exercise 2: AM Simulation](#top)
 Block diagram:
 
 ![l2p5](./images/l2p5.jpg)
@@ -196,7 +219,9 @@ However, if Ac < Am / overmodulated, the amplitude of the carrier is already fli
 
 ![l2p14](./images/l2p14.jpg)
 
-### Exercise 3
+<div id="lab2e3"/>
+
+### [Lab2 Exercise 3](#top)
 niUSRP is a communication module that can send and receive signals.
 Several components explanation:
 
@@ -242,7 +267,10 @@ Modulation index = 0.5:
 
 At this modulation index, noises started to appear on both frequency and time domain.
 
-### Exercise 4: Listerning to AM Music:
+<div id="lab2e4"/>
+
+
+### [Lab2 Exercise 4: Listerning to AM Music](#top)
 When running `USRP_AM_Rx_Music.gvi`, the music is received after around 1 minutes, because IQ rate is 100k, very high.
 
 > Not sure why IQ rate/sampling frequency affect time of receiving signal
@@ -250,4 +278,5 @@ When running `USRP_AM_Rx_Music.gvi`, the music is received after around 1 minute
 ![l2p25](./images/l2p25.jpg)
 
 > video: music recorded
+
 
