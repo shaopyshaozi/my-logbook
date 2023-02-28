@@ -11,6 +11,11 @@ Steven Shao, 27/01/2023
 * [Lab 2 Exercise 2](#lab2e2)
 * [Lab 2 Exercise 3](#lab2e3)
 * [Lab 2 Exercise 4](#lab2e4)
+* [Lab 3 Exercise 1](#lab3e1)
+* [Lab 3 Exercise 2](#lab3e2)
+* [Lab 3 Exercise 3](#lab3e3)
+* [Lab 3 Exercise 4](#lab3e4)
+* [Lab 3 Exercise 5](#lab3e5)
 
 <div id="lab1e1"/>
 
@@ -54,7 +59,9 @@ Inside LABVIEW, there is a "statistic block" under the diagram tab. This block c
 
 In this exercise, we are going to build an AM modulator and graph the output of the modulated signals. The equation for modulating a single tone signal is given by: 
  
-![l1e3](./images/19.PNG)
+$$
+s(t)=\left[A_c+A_m \cos \left(2 \pi f_m t\right)\right] \cos \left(2 \pi f_c t\right)
+$$
 
 __Question 1:__ Adjust plots using graph tools and show the block diagram: 
 
@@ -153,7 +160,9 @@ This is the block diagram of the model:
 
 The original signal is given by:
 
-![l2e3](./images/19.PNG)
+$$
+s(t)=\left[A_c+A_m \cos \left(2 \pi f_m t\right)\right] \cos \left(2 \pi f_c t\right)
+$$
 
 By multiplying the carrier signal and applying a low pass filter, we can get the following result:
 
@@ -169,7 +178,7 @@ Block Diagram:
 
 * Multiplication of $\Pi$ is used to amplify the signal and compensate the loss from rectification.
 
-> Rectifier does not have a simple impulse response, a diode that performs  rectification is a non-linear component and thus does not have a linear impulse response. But when we rectify a periodic signal, its impulse response looks like a square wave with same period T. (All negative value = 0). The convolution of cosine message signal with square wave has the following frequency response. At low frequecny, amplutude = 1/$\Pi$ with A = 1/2, so a multiplication of $\Pi$ is needed before rectification.
+> Rectifier does not have a simple impulse response, a diode that performs  rectification is a non-linear component and thus does not have a linear impulse response. But when we rectify a periodic signal, its impulse response looks like a square wave with same period T. (All negative value = 0). The convolution of cosine message signal with square wave has the following frequency response. At low frequecny, amplutude = 1/π with A = 1/2, so a multiplication of π is needed before rectification.
 
 ![l2p7](./images/l2p7.jpg)
 
@@ -209,7 +218,9 @@ Message amplitude = 4:
 
 This distortion comes from the mathematical logic behind the method. Remember, the AM signal has the equation:
 
-![l2e3](./images/19.PNG)
+$$
+s(t)=\left[A_c+A_m \cos \left(2 \pi f_m t\right)\right] \cos \left(2 \pi f_c t\right)
+$$
 
 The envelope detection line received the signal `Ac + Amcos(2pifmt)`. If Ac > Am/under modulation, the system is fine, becuase all the message signal is fully on the upper half plane. 
 
@@ -279,4 +290,97 @@ When running `USRP_AM_Rx_Music.gvi`, the music is received after around 1 minute
 
 > video: music recorded
 
+<div id="lab3e1"/>
+
+# Lab 3
+### [Lab3 Exercise 1 FM Modulator](#top)
+In this section, we were trying to build a FM modulator from the equation given. In the FM_Modulator.gvi, we used the block `Waveform Properties` to breaks up the continuous signal into arrays of data, `Integral x(t)` to make a integral of the signal, `Sine and Cosine` to take the sine and cosine values of the data, and `Build waveform` to reconstruct a continuous signal. 
+
+$$\theta_m(t)=2 \pi \mathbf{k}_f \int_0^t m(\tau) \mathbf{d} \tau$$
+$$s(t)=A_c \cos \left(2 \pi f_c t\right) \cos \left(\theta_m(t)\right)-A_c \sin \left(2 \pi f_c t\right) \sin \left(\theta_m(t)\right)$$
+$$
+s(t)=A_c \cos \left(2 \pi f_c t+\theta_m(t)\right)
+$$
+
+Here is our block diagram:
+
+![l3p1](./images/l3p1.jpg)
+
+When kf increases, the frequency deviation △f also increases as △f = kf * mf, where mf is the peak of the message signal, resulting a higher modulation index(μ). In frequency modulation (FM), the modulation index is defined as the ratio of the frequency deviation of the carrier signal to the frequency of the modulating signal. A higher modulation index in FM results in a larger variation in the frequency of the carrier signal and a wider bandwidth of the modulated signal. Thus, as we can see from the modulated PSD, the spectrum spread over a larger frequency range as kf increases.
+
+kf = 500
+
+![l3p2](./images/l3p2.jpg)
+
+kf = 2000
+
+![l3p3](./images/l3p3.jpg)
+
+kf = 5000
+
+![l3p4](./images/l3p4.jpg)
+
+
+<div id="lab3e2"/>
+
+### [Lab3 Exercise 2: FM Demodulator](#top)
+One way of demodulating the FM signal is by differentiating the FM signal. The output is an AM+FM signal. Then, demodulate the AM+FM signal using envelope detector to extract the message signal incoporate inside the amplitude. The mathematical model behind this is shown below:
+
+![l3p5](./images/l3p5.jpg)
+
+Remember from Lab 2, there is a rectification loss of π, so in the block diagram, we only divide 2kf instead of 2kfπ.
+
+![l3p6](./images/l3p6.jpg)
+
+<div id="lab3e3"/>
+
+### [Lab3 Exercise 3: FM Simulation](#top)
+By adding the two previous subVIs together and connecting properly, we can then do FM Simulation. Using the given values, we recover the proper message signal with a amplitude of 2 and frequenct of 1000Hz.
+
+> block diagram
+
+![l3p8](./images/l3p8.jpg)
+
+<div id="lab3e4"/>
+
+### [Lab3 Exercise 4: FM communications via USRP](#top)
+Using the given code, we are able to receive FM signal via USRP. 
+
+Carson's rule:  
+$$B_{F M} \cong 2(\Delta f+B)$$
+
+Message signal is a single tone signal with frequency centered at 1000 Hz and bandwidth around 20 Hz.
+
+![l3p9](./images/l3p9.jpg)
+
+Frequency deviation (△f) = 1 kHz:
+
+![l3p10](./images/l3p10.jpg)
+
+$$B_{F M} \cong 2(\Delta f+B) = 2(1k + 20) = 2040 Hz$$
+
+Frequency deviation (△f) = 5 kHz:
+
+![l3p11](./images/l3p11.jpg)
+
+$$B_{F M} \cong 2(\Delta f+B) = 2(5k + 20) = 10040 Hz$$
+
+Frequency deviation (△f) = 30 kHz:
+
+![l3p12](./images/l3p12.jpg)
+
+$$B_{F M} \cong 2(\Delta f+B) = 2(30k + 20) = 60040 Hz$$
+
+<div id="lab3e5"/>
+
+### [Lab3 Exercise 5: Listening to FM Radio using USRP](#top)
+Using the given VI `Find Radio Station.gvi` and setting the carrier frequency to 90M and the IQ rate to 20M, the system search the radio signal amplitde with a graph centered at 0 (90MHz) and bandwidth is 20MHz (+/-10MHz). I found that 83.4MHz has the strongest signal at that time.
+
+![l3p13](./images/l3p13.jpg)
+
+Then, using `FM Music.gvi`, we were able to listen to the radio at the specfic frequency by setting the gain to 3000(amplify the signal). Tried: BBC1 - 98.8MHz.
+
+> Video is recorded
+
+![l3p14](./images/l3p14.jpg)
 
