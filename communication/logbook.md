@@ -7,7 +7,7 @@ Steven Shao, 27/01/2023
 * [Lab 1 Exercise 1](#lab1e1)
 * [Lab 1 Exercise 2](#lab1e2)
 * [Lab 1 Exercise 3](#lab1e3)
-* [Lab 2 Exercise 1](#lab2e1)
+* [Lab 2 Exercise 1（Rectifier）](#lab2e1)
 * [Lab 2 Exercise 2](#lab2e2)
 * [Lab 2 Exercise 3](#lab2e3)
 * [Lab 2 Exercise 4](#lab2e4)
@@ -395,6 +395,7 @@ Then, using `FM Music.gvi`, we were able to listen to the radio at the specfic f
 ### [Lab 4 Exercise 1 BPSK Transmitter](#top)
 
 The BPSK signal is given by:
+
 $$
 A g_{T X}(t) \cos \left(2 \pi f_c t+\theta(t)\right)
 $$
@@ -408,6 +409,7 @@ $$
 The step needed to form a BPSK signal:
 
 * symbol mapping: 
+
 $$
 \begin{array}{|l|l|l|}
 \hline \text { Bit Value } & \text { Phase }(\theta) & \text { Symbol } \\
@@ -464,6 +466,7 @@ The main lobe bandwidth is smaller for root-raised-cosine, and the spectral roll
 ### [Lab 4 Exercise 2 BPSK Receiver](#top)
 
 The BPSK signal arrived at the receiver end is：
+
 $$
 r(t)= \pm D g_{T X}(t) \cos \left(2 \pi f_c t+\varphi\right)
 $$
