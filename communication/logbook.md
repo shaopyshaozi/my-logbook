@@ -16,6 +16,10 @@ Steven Shao, 27/01/2023
 * [Lab 3 Exercise 3](#lab3e3)
 * [Lab 3 Exercise 4](#lab3e4)
 * [Lab 3 Exercise 5](#lab3e5)
+* [Lab 4 Exercise 1](#lab4e1)
+* [Lab 4 Exercise 2](#lab4e2)
+* [Lab 4 Exercise 3](#lab4e3)
+* [Lab 4 Exercise 4](#lab4e4)
 
 <div id="lab1e1"/>
 
@@ -383,4 +387,208 @@ Then, using `FM Music.gvi`, we were able to listen to the radio at the specfic f
 > Video is recorded
 
 ![l3p14](./images/l3p14.jpg)
+
+# Lab 4
+
+<div id="lab4e1"/>
+
+### [Lab 4 Exercise 1 BPSK Transmitter](#top)
+
+The BPSK signal is given by:
+$$
+A g_{T X}(t) \cos \left(2 \pi f_c t+\theta(t)\right)
+$$
+
+where $\theta(t)$ takes the value of either 0 or 180 degree to carry the desired informtaion, so the equation is as follows:
+
+$$
+\pm A g_{T X}(t) \cos \left(2 \pi f_c t\right)
+$$
+
+The step needed to form a BPSK signal:
+
+* symbol mapping: 
+$$
+\begin{array}{|l|l|l|}
+\hline \text { Bit Value } & \text { Phase }(\theta) & \text { Symbol } \\
+\hline 0 & 0 & -1 \\
+\hline 1 & 180 & +1 \\
+\hline
+\end{array}
+$$
+
+* upsampling: In the context of BPSK, upsampling is used to increase the data rate of the transmitted signal. This is typically done by inserting additional zeros between the original data bits, which effectively increases the symbol rate of the signal. __Increase data transmission rate without requiring additional bandwidth.__ 
+
+$$
+After sampling:\frac{1}{T_x}=L \frac{1}{T}(sample rate)
+$$
+
+$$ L = \frac{IQ rate}{symbol rate} $$
+
+* Pulse Shaping: Use root-raised cosine, pulse shape has a very rapid spectral roll-off, so that consecutive transmitted symbols do not interfere with each other. __avoid inter-symbol interference__
+
+Given IQ rate is 200kHz, symbol rate is 10000 symbols/s, L is 20.
+
+Here is the block diagram and front pannel.
+
+![l4p1](./images/l4p1.jpg)
+
+>Front pannel
+
+![l4p11](./images/l4p11.jpg)
+
+
+We noticed that there are already some pannels showing both transmitted signals and recevied basedband signal built inside the block.
+
+Root-Raised-Cosine:
+
+![l4p2](./images/l4p2.jpg)
+
+Main lobe bandwidth: 7500Hz
+
+No Shape:
+
+![l4p3](./images/l4p3.jpg)
+
+Main lobe bandwidth: 10000Hz
+
+The main lobe bandwidth is smaller for root-raised-cosine, and the spectral roll-off is greater. __To avoid interference__
+
+#### What is interference between symbols
+***In digital communication systems, inter-symbol interference (ISI) occurs when the transmitted symbols interfere with each other due to the limited bandwidth of the communication channel. This happens because a signal that is transmitted through a channel occupies a certain amount of frequency bandwidth in that channel.***
+
+***When the bandwidth of the transmitted signal exceeds the available bandwidth of the channel, the signal starts to interfere with adjacent frequency bands, causing distortion and interference. This interference can cause the symbols to become blurred and overlap with each other, which leads to ISI.***
+
+<div id="lab4e2"/>
+
+### [Lab 4 Exercise 2 BPSK Receiver](#top)
+
+The BPSK signal arrived at the receiver end is：
+$$
+r(t)= \pm D g_{T X}(t) \cos \left(2 \pi f_c t+\varphi\right)
+$$
+
+The angle $\varphi$ represents the difference in phase between the transmitter and receiver carrier oscillators.
+
+The steps needed to obtain the transmitted signals are:
+
+* Channel estimation: To remove the phase offset between transmitter and receivers oscillators. On the transmitter side, a pilot signal is sent. The channel estimation stage receive the signal, and performing least-square channel estimation to find the channels transfer function, reverse it then applied to the received signal.
+
+* Matched filtering: applied same root-rasied cosine filter, maximize SNR. The output is the analogue baseband signal that must be sampled once per symbol rate.
+
+* Pulse Synchronization: use Pulse Align to align baseband signal
+
+* Sampling: Sampling at symbol rate
+
+* Detection and Symbol mapping, detect -1 or 1 and transformed to 0 or 1.
+
+
+By running the transmitter and receiver several time at gain 0dB, we noticed that **the BER is always 0**, indicating that all signals are recieved properly.
+
+The BER module given is the lab is not working properly. I created my own BER module:
+
+![l4p4](./images/l4p4.jpg)
+
+BER at different gain:
+
+$$
+\begin{array}{|c|c|c|c|c|c|c|c|}
+\hline \text { Tx G } & \text { Rx G } & \text {  1 } & \text {  2 } & \text { 3 } & \text {  4 } & \text {  5 } & \text { BER Aver. } \\
+\hline 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\hline-35 & -15 & 0.226 & 0.213 & 0.283 & 0.227 & 0.212 & 0.2322 \\
+\hline-37 & -15 & 0.256 & 0.316 & 0.252 & 0.253 & 0.253 & 0.266 \\
+\hline-40 & -15 & 0.36 & 0.363 & 0.355 & 0.389 & 0.359 & 0.3652 \\
+\hline
+\end{array}
+$$
+
+It makes sense, as the gain decreases, it is harder for receiver to recover the transmitted signals.
+
+<div id="lab4e3"/>
+
+### [Lab 4 Exercise 3 DPSK](#top)
+DPSK is similar to BPSK,but in stead of transmitting the signal itself, it sends the difference between to adjacent bits.
+
+Encoder: $b_n=b_{n-1} \times a_n$, where $a_n$ is the information symbol. 
+
+![l4p5](./images/l4p5.jpg)
+
+Decoder: Received data are complex valued, decoder is the product of the current sample and the complex conjugate of the previous sample.
+
+![l4p6](./images/l4p6.jpg)
+
+BER of DPSK at different gain:
+
+$$
+\begin{array}{|c|c|c|c|c|c|c|c|}
+\hline \text { Tx G } & \text { Rx G } & \text {  1 } & \text {  2 } & \text {  3 } & \text {  4 } & \text {  5 } & \text { BER Aver. } \\
+\hline 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\hline-35 & -15 & 0.314 & 0.31 & 0.346 & 0.323 & 0.284 & 0.3154 \\
+\hline-37 & -15 & 0.382 & 0.356 & 0.36 & 0.373 & 0.358 & 0.3658 \\
+\hline-40 & -15 & 0.437 & 0.413 & 0.405 & 0.415 & 0.412 & 0.4164 \\
+\hline
+\end{array}
+$$
+
+We noticed that at low gain senerio, BPSK is better than DPSK with lower BER. 
+
+***This is because in BPSK, the transmitted signal is a simple phase shift of either 0 or 180 degrees, while in DPSK, the transmitted signal is a phase shift relative to the previous symbol. When the SNR is low, the noise in the channel can cause errors in the phase of the DPSK signal, leading to errors in decoding the transmitted data. In contrast, with BPSK, the receiver only needs to compare the phase of the received signal to a fixed reference, which can be done more accurately even in noisy conditions.***
+
+<div id="lab4e4"/>
+
+### [Lab 4 Exercise 4 Error Correction Coding](#top)
+Forward error correction（FEC）is performed by adding redundancy to the transmitted information. The transmitter send each data bit 3 times (triplet). The receiver might receive 8 versions of triplets and decode based on majority vote.
+
+FEC encoder: send data three time
+
+![l4p7](./images/l4p7.jpg)
+
+Validation:
+
+![l4p8](./images/l4p8.jpg)
+
+FEC decoder: decode based on the following principle:
+
+$$
+\begin{array}{|c|c|}
+\hline \text { Triplet received } & \text { Bit decoded } \\
+\hline 000 & 0 \\
+\hline 001 & 0 \\
+\hline 010 & 0 \\
+\hline 011 & 1 \\
+\hline 100 & 0 \\
+\hline 101 & 1 \\
+\hline 110 & 1 \\
+\hline 111 & 1 \\
+\hline
+\end{array}
+$$
+
+![l4p9](./images/l4p9.jpg)
+
+Validation:
+
+![l4p10](./images/l4p10.jpg)
+
+BER of using FEC:
+
+$$
+\begin{array}{|c|c|c|c|c|c|c|c|}
+\hline \text { Tx G } & \text { Rx G } & 1 & 2 & 3 & 4 & 5 & \text { BER Aver. } \\
+\hline 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\hline-35 & -15 & 0.14 & 0.167 & 0.177 & 0.149 & 0.159 & 0.1584 \\
+\hline-37 & -15 & 0.223 & 0.232 & 0.188 & 0.198 & 0.22 & 0.2122 \\
+\hline-40 & -15 & 0.319 & 0.282 & 0.288 & 0.315 & 0.302 & 0.3012 \\
+\hline
+\end{array}
+$$
+
+Compared to BER results from Lab 2, FEC has improved the BER of the system. BER is smaller now.
+
+Advantage of FEC is **improved reliability**
+
+Disadvantage of DEC is **reduced effective data rate**, becuase the overhead is need to transmitted in the form of redundant data.
+
+
+
 
