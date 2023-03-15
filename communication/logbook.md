@@ -137,7 +137,7 @@ fm = 2k
 
 fm = 5k 
 
-The varying message frequency changes the modulated signal's frequency graph. The cosine wave's frequency modulation graph is creating to spikes around the carrier frequency (plus or minus the message frequency). When frequency increases, the separation between the spikes increases. 
+The varying message frequency changes the modulated signal's frequency graph. The cosine wave's frequency modulation graph is creating to spikes around the carrier frequency (plus or minus the message frequency). When frequency increases, the separation between the spikes increases. In addition, envelope signal has larger frequency !!!
 
  
 In the last step, we created a sub-VI for this design, similar to a sub-module. 
@@ -592,6 +592,18 @@ Advantage of FEC is **improved reliability**
 
 Disadvantage of DEC is **reduced effective data rate**, becuase the overhead is need to transmitted in the form of redundant data.
 
+
+> BPSK vs DPSK
+
+> BPSK has good performance in the presence of noise/better performance in low gain senario. The performance of BPSK in low SNR environments benefits from the wider phase separation (180 degrees) between the two symbol states, which makes it less likely for noise to cause one symbol to be mistaken for the other during demodulation. 
+
+> On the other hand, DPSK receiver must estimate the phase difference between successive symbols, and this estimation is more susceptible to noise than the direct phase comparison used in BPSK demodulation.
+
+> DPSK is less sensitive to carrier synchronization requirement.
+
+> In BPSK, the demodulation process involves comparing the phase of the received signal with a reference signal at the receiver. This requires precise carrier frequency and phase synchronization between the transmitter and receiver. That's why we use "header & synchronization" in BPSK. 
+
+> On the other hand, DPSK demodulation process is based on the phase difference between successive symbols. The transmitted information is encoded as phase transitions rather than absolute phase values. This means that DPSK demodulation can still work correctly even if there is a phase or frequency offset, as long as the phase transitions between successive symbols are preserved. No need for synchronization.
 
 
 
